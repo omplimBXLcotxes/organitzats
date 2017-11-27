@@ -111,13 +111,6 @@ app.controller("HomeCtrl", function ($scope, $state, $stateParams, $firebaseArra
         });
     });
 
-    $scope.minim = function (cotxe) {
-        if ($scope.minim_places) {
-            return cotxe.lliures >= $scope.minim_places;
-        } else {
-            return true;
-        }
-    }
     $scope.datamin = function (cotxe) {
         if ($scope.dataminim) {
             return cotxe.anada == $scope.dataminim;
@@ -142,12 +135,10 @@ app.controller("HomeCtrl", function ($scope, $state, $stateParams, $firebaseArra
     }
     $scope.filtre_vehicle = "tot";
     $scope.filtrevehicle = function (cotxe) {
-        if ($scope.filtre_vehicle == "Cotxe") {
-            return cotxe.vehicle == "Cotxe";
-        } else if ($scope.filtre_vehicle == "Moto") {
-            return cotxe.vehicle == "Moto";
-        } else if ($scope.filtre_vehicle == "Caravana") {
-            return cotxe.vehicle == "Caravana";
+        if ($scope.filtre_vehicle == "Avió") {
+            return cotxe.vehicle == "Avió";
+        } else if ($scope.filtre_vehicle == "Autobús") {
+            return cotxe.vehicle == "Autobús";
         } else {
             return true;
         }
@@ -193,14 +184,14 @@ app.controller("HomeCtrl", function ($scope, $state, $stateParams, $firebaseArra
                     text: "<a href='#/contactar/" + place.$id + "'>" + place.ubicacio + " - " + place.passatgers + " persones</a>"
                 }
                 var label = "";
-                if (place.lliures > 0) {
-                    label = "*";
+                if (place.vehicle == "Avió") {
+                    icon = "avio.png";
                 } else {
-                    label = ""
+                    icon = "bus.png";
                 }
                 var marker = new google.maps.Marker({
                     position: markerData,
-                    label: label
+                    icon: icon
                 });
                 google.maps.event.addListener(marker, 'spider_click', function (e) { // 'spider_click', not plain 'click'
                     infowindow.setContent(markerData.text);
@@ -218,7 +209,7 @@ app.controller("HomeCtrl", function ($scope, $state, $stateParams, $firebaseArra
 
 
 app.controller("AddCtrl", function ($scope, $state, $stateParams, $firebaseArray, $firebaseObject) {
-    $scope.vehicle = "Cotxe";
+    $scope.vehicle = "Avió";
     var ref = firebase.database().ref();
     $scope.cotxes = $firebaseArray(ref.child("cotxes"));
     $(document).ready(function () {
@@ -235,7 +226,7 @@ app.controller("AddCtrl", function ($scope, $state, $stateParams, $firebaseArray
             if (user.emailVerified == false) {
                 $state.go("verificar", {
                     mid: "afegir",
-                    fin: "cotxe"
+                    fin: "transport"
                 });
             }
             $scope.usuari = $firebaseObject(ref.child("usuaris/" + user.uid));
@@ -281,8 +272,6 @@ app.controller("AddCtrl", function ($scope, $state, $stateParams, $firebaseArray
                         alert("El nombre de passatgers i/o places disponibles no pot ser inferior a 0");
                     } else if (passatgers < lliures) {
                         alert("El nombre de places lliures no pot ser superior al de passatgers");
-                    } else if (passatgers > 10) {
-                        alert("Número de passatgers molt elevat.\No es pot publicar. Contacta'ns a vehiclesbrusselles@gmail.com i t'ajudarem.");
                     } else if (passatgers == 0) {
                         alert("El nombre de passatgers no pot ser 0");
                     } else if (passatgers % 1 != 0 || lliures % 1 != 0) {
@@ -346,7 +335,7 @@ app.controller("AddCtrl", function ($scope, $state, $stateParams, $firebaseArray
         } else {
             $state.go("login", {
                 mid: "afegir",
-                fin: "cotxe"
+                fin: "transport"
             });
         }
 
@@ -609,7 +598,7 @@ app.controller("LoginCtrl", function ($scope, $state, $stateParams, $firebaseArr
             } else if ($stateParams.mid == "editar-publicacions") {
                 $state.go("editartot");
             } else {
-                window.location = "http://cotxes.omplimbrusselles.eu/#/" + $stateParams.mid + "/" + $stateParams.fin;
+                window.location = "http://organitzats.omplimbrusselles.eu/#/" + $stateParams.mid + "/" + $stateParams.fin;
             }
 
         }
@@ -623,11 +612,11 @@ app.controller("LoginCtrl", function ($scope, $state, $stateParams, $firebaseArr
             tosUrl: 'http://www.marcpujolgualdo.cat'
         };
         if ($stateParams.mid == "afegir") {
-            uiConfig.signInSuccessUrl = 'http://cotxes.omplimbrusselles.eu/#/afegir';
+            uiConfig.signInSuccessUrl = 'http://organitzats.omplimbrusselles.eu/#/afegir';
         } else if ($stateParams.mid == "editar-publicacions") {
-            uiConfig.signInSuccessUrl = 'http://cotxes.omplimbrusselles.eu/#/editar';
+            uiConfig.signInSuccessUrl = 'http://organitzats.omplimbrusselles.eu/#/editar';
         } else {
-            uiConfig.signInSuccessUrl = 'http://cotxes.omplimbrusselles.eu/#/' + $stateParams.mid + "/" + $stateParams.fin;
+            uiConfig.signInSuccessUrl = 'http://organitzats.omplimbrusselles.eu/#/' + $stateParams.mid + "/" + $stateParams.fin;
         }
         var ui = new firebaseui.auth.AuthUI(firebase.auth());
         ui.start('#firebaseui-auth-container', uiConfig);
@@ -646,7 +635,7 @@ app.controller("VerificarCtrl", function ($scope, $state, $stateParams, $firebas
             } else if ($stateParams.mid == "editar-publicacions") {
                 $state.go("editartot");
             } else {
-                window.location = "http://cotxes.omplimbrusselles.eu/#/" + $stateParams.mid + "/" + $stateParams.fin;
+                window.location = "http://organitzats.omplimbrusselles.eu/#/" + $stateParams.mid + "/" + $stateParams.fin;
             }
         } else if ((user) && !(user.emailVerified)) {
             $scope.user = user;
@@ -723,7 +712,7 @@ app.controller("ContactarCtrl", function ($scope, $state, $stateParams, $firebas
                     } else {
 
                         $scope.carregant = true;
-                        $.get("https://us-central1-cotxesbrusselles.cloudfunctions.net/enviarMissatge?email=" + encodeURI(email) + "&telefon=" + encodeURI(telefon) + "&msg=" + encodeURI(missatge) + "&id=" + encodeURI($stateParams.id) + "&uid=" + encodeURI($scope.cotxe.id), function (data) {
+                        $.get("https://us-central1-organitzatsbrusselles.cloudfunctions.net/enviarMissatge?email=" + encodeURI(email) + "&telefon=" + encodeURI(telefon) + "&msg=" + encodeURI(missatge) + "&id=" + encodeURI($stateParams.id) + "&uid=" + encodeURI($scope.cotxe.id), function (data) {
                             console.log(data);
                             if (data == "Fet") {
                                 $state.go("contactat", {
