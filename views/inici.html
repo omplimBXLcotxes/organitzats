@@ -94,7 +94,7 @@
                 <a class="btn" ui-sref="contactar({id: cotxe.$id})" ng-if="cotxe.lliures">CONTACTAR</a>
                 <a class="btn" ui-sref="editar({id: cotxe.$id})" ng-if="user_id && ((user_id==cotxe.id)||(user_id=='ucCScs6GWKXvTT7O6cirDt1K0QM2')||(user_id=='txA396QdGdXVK7rnT0L4PmPrMi12'))">EDITAR</a>
                 <a class="btn" ng-click="eliminar(cotxe.$id, cotxe.id)" ng-if="user_id && ((user_id==cotxe.id)||(user_id=='ucCScs6GWKXvTT7O6cirDt1K0QM2')||(user_id=='txA396QdGdXVK7rnT0L4PmPrMi12'))" style="background-color:#ff5252">ELIMINAR</a>
-                <a class="btn disabled" ui-sref="contactar({id: cotxe.$id})" ng-if="!cotxe.lliures">COTXE PLE</a>
+                <a class="btn disabled" ui-sref="contactar({id: cotxe.$id})" ng-if="!cotxe.lliures">TRANSPORT PLE</a>
                 <p am-time-ago="cotxe.date" style="position: absolute;right: 20px;top: 10px;color:grey;"></p>
             </div>
         </div>
